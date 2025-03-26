@@ -18,3 +18,6 @@ var albums = []album{
 	{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
 	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
 }
+
+// album data is only hardcoded in memory here to simplify the project
+// so that a database connection is not needed.
