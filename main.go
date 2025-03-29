@@ -37,6 +37,7 @@ var albums = []album{
 func main() {
 	router := gin.Default()          // initialize a gin router
 	router.GET("/albums", getAlbums) // map a url path and http GET method to a handler
+	router.POST("/albums", postAlbum)
 
 	router.Run("localhost:8080") // attach router to an http.Server and start server
 }
@@ -55,3 +56,29 @@ func getAlbums(c *gin.Context) {
 // we are using Context.IndentedJSON to serialize data from the albums struct
 // and include it in the response. the first arg passed is the status code
 // which will be returned by the response.
+
+// postAlbum adds an album from JSON in the request body
+func postAlbum(c *gin.Context) {
+	var newAlbum album
+
+	// BindJSON is used to bind the JSON recieved to newAlbum
+	if err := c.BindJSON(&newAlbum); err != nil {
+		return
+	}
+
+	// the statement after `if` and before `;` is executed before the
+	// condition (which is after `;` and before `{}`)
+	// in this instance, we pass the pointer address/reference for
+	// `newAlbum` to `BindJSON`, which will only return a value if there
+	// is an error. if the error is not nil, the handler returns
+	// without adding newAlbum.
+
+	// note: there is no validation for JSON in the request and currently
+	// BindJSON will still create a record if there is any valid JSON
+	// regardless of it matching the album struct field names or not.
+	// an error will only occur if there is no JSON.
+
+	// add newAlbum to albums and return newAlbum
+	albums = append(albums, newAlbum)
+	c.IndentedJSON(http.StatusCreated, newAlbum)
+}
